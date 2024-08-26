@@ -7,7 +7,8 @@ const getUsers = async (req, res) => {
 
   res.json({
     ok: true,
-    msg: "get Users",
+    users,
+    //uid
   });
 };
 
@@ -34,16 +35,16 @@ const createUser = async (req, res = response) => {
     await user.save();
 
     //Generar TOKEN - JWT
-    const token = await generateJWT( userDB.id );
+    const token = await generateJWT( user.id );
 
 
     res.json({
       ok: true,
       msg: "Create user",
-      user: user,
+      user,
       token
     });
-    
+     
   } catch (error) {
     res.status(500).json({
       ok: false,
