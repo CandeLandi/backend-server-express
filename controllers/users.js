@@ -1,9 +1,19 @@
 const { response } = require("express");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const { generateJWT } = require('../helpers/jwt');
 
 const getUsers = async (req, res) => {
-  const users = await User.find({}, "name email role google");
+  const from = Number(req.query.from) || 0; 
+
+  const [users, total] = await Promise.all([
+    User
+    .find({}, "name email role google")
+    .skip( from )
+    .limit( 5 ),
+
+    User.count()
+  ]);
 
   res.json({
     ok: true,
@@ -27,16 +37,15 @@ const createUser = async (req, res = response) => {
 
     const user = new User(req.body);
 
-    //Encriptar contraseña
+    // Encriptar contraseña
     const salt = bcrypt.genSaltSync();
     user.password = bcrypt.hashSync(password, salt);
 
-    //Guardar usuario
+    // Guardar usuario
     await user.save();
 
-    //Generar TOKEN - JWT
-    const token = await generateJWT( user.id );
-
+    // Generar TOKEN - JWT
+    const token = await generateJWT(user.id);
 
     res.json({
       ok: true,
@@ -44,14 +53,16 @@ const createUser = async (req, res = response) => {
       user,
       token
     });
-     
+
   } catch (error) {
+    console.error("Error en createUser:", error); // Agrega esto para más detalles
     res.status(500).json({
       ok: false,
       msg: "Error inesperado... revisar logs",
     });
   }
 };
+
 
 const updateUser = async (req, res = response) => {
   const uid = req.params.id;
