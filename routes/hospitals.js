@@ -30,8 +30,17 @@ router.put( '/:id',
     updateHospital
 );
 
+router.put(':id',
+  [
+    validateJWT,
+    check('name', 'El nombre del hospital es necesario').not().isEmpty(),
+    validateFields
+  ]
+)
+
 router.delete( '/:id',
     deleteHospital
 )
+
 
 module.exports = router;

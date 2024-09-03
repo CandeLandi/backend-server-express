@@ -25,12 +25,14 @@ router.post(
   createDoctor
 );
 
-router.put( '/:id',
-    [
-
-    ],
-    updateDoctor
-);
+router.put('/:id',
+  [
+    validateJWT,
+    check('name', 'El nombre del doctor es necesario').not().isEmpty(),
+    validateFields
+  ],
+  updateDoctor
+)
 
 router.delete( '/:id',
     deleteDoctor
