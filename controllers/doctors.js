@@ -1,14 +1,45 @@
 const Doctor = require("../models/doctors");
 
 const getDoctors = async (req, res = response) => {
+  const desde = Number(req.query.desde) || 0;
 
-  const doctors = await Doctor.find().populate("user", "name img")
-                                      .populate("hospital", "name img");
+  const [doctors, total] = await Promise.all([
+    Doctor.find()
+          .populate("user", "name img")
+          .populate("hospital", "name img")
+          .skip(desde)  
+          .limit(5),    
+
+    Doctor.countDocuments()
+  ]);
 
   res.json({
     ok: true,
     doctors,
+    total
   });
+};
+
+const getDoctorById = async (req, res = response) => {
+
+  const id = req.params.id;
+
+  
+  try {
+      const doctor = await Doctor.findById(id).populate("user", "name img")
+                                          .populate("hospital", "name img");
+      res.json({
+        ok: true,
+        doctor,
+      });
+    
+  } catch (error) {
+    console.log(error),
+    res.json({
+      ok: true,
+      msg: 'Hable con el administrador'
+    });
+  }
 };
 
 const createDoctor = async (req, res) => {
@@ -25,7 +56,7 @@ const createDoctor = async (req, res) => {
     res.json({
       ok: true,
       msg: "create médico",
-      doctor
+      doctorDB
     });
   } catch (error) {
     console.log(error);
@@ -110,4 +141,5 @@ module.exports = {
   updateDoctor,
   createDoctor,
   deleteDoctor,
+  getDoctorById
 };

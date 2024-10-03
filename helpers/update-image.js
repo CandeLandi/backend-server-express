@@ -5,7 +5,7 @@ const Doctor = require("../models/doctors");
 const Hospital = require("../models/hospital");
 
 const deleteImage = (path) => {
-  if (fs.existsSync(path)) {
+  if (path && fs.existsSync(path)) {
     //borrar la imagen anterior
     fs.unlinkSync(path);
   }
@@ -31,7 +31,7 @@ const updateImage = async (type, id, fileName) => {
       await doctor.save();
       return true;
 
-      break;
+
     case "hospitals":
       const hospital = await Hospital.findById(id);
       if (!hospital) {
@@ -44,7 +44,7 @@ const updateImage = async (type, id, fileName) => {
       hospital.img = fileName;
       await hospital.save();
       return true;
-      break;
+
     case "users":
       const user = await User.findById(id);
       if (!user) {
@@ -57,10 +57,11 @@ const updateImage = async (type, id, fileName) => {
       user.img = fileName;
       await user.save();
       return true;
-      break;
+
   }
 };
 
 module.exports = {
   updateImage,
+  deleteImage
 };
