@@ -8,8 +8,8 @@
             { title: 'ProgressBar', url: 'progress'},
             { title: 'Graphics', url: 'grafica1'},
             { title: 'Settings', url: 'account-settings'},
-            { title: 'Promises', url: 'promises'},
-            { title: 'Rxjs', url: 'rxjs'},
+/*             { title: 'Promises', url: 'promises'},
+            { title: 'Rxjs', url: 'rxjs'}, */
             { title: 'Profile', url: 'profile'}
           ]
         },
